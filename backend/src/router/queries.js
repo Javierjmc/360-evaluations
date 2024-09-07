@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { connect } from '../database/run.js'
+import Employee from '../database/models/Employee.js'
 
 const routerQuery = Router()
 
