@@ -8,6 +8,13 @@ import bodyParser from 'body-parser'
 const app = express();
 // se crea router
 const router = express.Router();
+//crear las rutas
+
+router.post('/api/auth/register', (req,res)=>{console.log('registro')})
+router.post('/api/auth/login', (req,res)=>{console.log('login')})
+router.get('/api/employees', (req,res)=>{console.log('employees')})
+router.post('/api/evaluations', (req,res)=>{console.log('evaluations')})
+router.post('/api/evaluations/:id', (req,res)=>{console.log(`evaluacion con id ${req.params.id}`)})
 
 router.get('/ruta', (req, res) => {
 
