@@ -11,10 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-      },
-    },
-      colors: {
-            "border": "hsl(var(--border))",
+             "border": "hsl(var(--border))",
             "input": "hsl(var(--input))",
             "ring": "hsl(var(--ring))",
             "background": "hsl(var(--background))",
@@ -47,7 +44,8 @@ export default {
               "DEFAULT": "hsl(var(--card))",
               "foreground": "hsl(var(--card-foreground))"
             }
-          },
+      },
+    },
       borderRadius: {
             "lg": "var(--radius)",
             "md": "calc(var(--radius) - 2px)",

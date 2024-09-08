@@ -10,6 +10,7 @@ import { NavLink } from "react-router-dom"
 import { useData } from "../lib/Context"
 
 
+
 export function Dashboard360() {
   const { users } = useData()
   
@@ -25,9 +26,19 @@ export function Dashboard360() {
           className="flex items-center gap-2 text-lg font-semibold"
           prefetch={false}>
           <ClipboardListIcon className="h-6 w-6" />
-          <span>360 Evaluations</span>
+          <span>360</span>
         </a>
-        <DropdownMenu>
+        <div className="flex items-center gap-1">
+          <span className="font-semibold text-xl">username</span>
+          <span className="opacity-50 text-gray-400">(rol)</span>
+        </div>
+        <button>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+          </svg>
+        </button>
+        
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
               <img
@@ -45,10 +56,10 @@ export function Dashboard360() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Logout</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </header>
       <div className="flex flex-1">
-        <aside className="hidden w-14 flex-col border-r bg-background sm:flex">
+        {/* <aside className="hidden w-14 flex-col border-r bg-background sm:flex">
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
             <TooltipProvider>
               <Tooltip>
@@ -101,11 +112,11 @@ export function Dashboard360() {
               </Tooltip>
             </TooltipProvider>
           </nav>
-        </aside>
+        </aside> */}
         <div className="flex flex-1 flex-col">
           <main className="flex-1 p-4 sm:p-6">
             <div className="grid gap-6">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {/* <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium">Total Evaluations</CardTitle>
@@ -146,7 +157,7 @@ export function Dashboard360() {
                     <p className="text-xs text-muted-foreground">+2 from last month</p>
                   </CardContent>
                 </Card>
-              </div>
+              </div> */}
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
                 <Card>
                   <CardHeader className="pb-3">
@@ -227,7 +238,7 @@ export function Dashboard360() {
                       
                       {users.map( user => <TableRow key={user._id}>
                         <TableCell>
-                          <div className="font-medium">{user.name}</div>
+                          <div className="font-medium">{user.username}</div>
                           <div className="hidden text-sm text-muted-foreground sm:inline">{user.email}</div>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">{user.rate}</TableCell>
@@ -235,20 +246,7 @@ export function Dashboard360() {
                           <Badge variant="secondary">Completed</Badge>
                         </TableCell>
                         <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button aria-haspopup="true" size="icon" variant="ghost">
-                                <MoveVerticalIcon className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>View</DropdownMenuItem>
-                              <NavLink to={`/feedback/${user._id}`} >
-                                <DropdownMenuItem>Evaluar</DropdownMenuItem>
-                              </NavLink>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <NavLink to={`/feedback/${user._id}`} >Evaluar</NavLink>
                         </TableCell>
                       </TableRow>)}
                     </TableBody>

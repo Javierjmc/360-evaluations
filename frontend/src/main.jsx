@@ -6,12 +6,16 @@ import { DataProvider } from './lib/Context.jsx'
 import { Dashboard360 } from './routes/Dashboard360'
 import { Form360 } from './routes/Form360'
 import { Login } from './routes/Login'
-
+import SingUp from './routes/SingUp.jsx'
 
 const routes = createBrowserRouter([
   {
     path:'/',
     element: <Login />
+  },
+  {
+    path:'/singup',
+    element: <SingUp />
   },
   {
     path:'/dashboard',

@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState, useContext } from "react";
-import { users as dataUsers } from "../tools/constants";
 
 const Context = createContext({
     currentUser: null,
@@ -19,15 +18,42 @@ export function DataProvider({ children }) {
         role: 'Developer'
     })
 
+    const getCurrentUser = () => {
+        const token = sessionStorage.getItem("token")
+        if( token ) {
+            fetch(`${import.meta.env.VITE_API_URL}/`)
+        }
+    }
+
     useEffect(()=>{
-        setUsers( dataUsers )
+        (async()=>{
+            const token = sessionStorage.getItem('token')
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/list-users`,{
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const { error, message, data } = await response.json()
+            console.log( data )
+            if( data ) {
+                setUsers(data)
+            }
+        })()
     },[])
 
     console.log(users)
 
-    const getUser = (id) => {
-        console.log(users)
-        return users.find( item => item._id === id )
+    const getUser = async (id) => {
+        const token = sessionStorage.getItem('token')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/list-users`,{
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+        const { error, message, data } = await response.json()
+        
+        return data.find( user => user._id==id)
+        
     }
 
 
