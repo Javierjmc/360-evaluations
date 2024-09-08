@@ -10,7 +10,11 @@ const EmployeeSchema = new Schema({
     name: {
         type: String,
         required: true
-    }  
+    },
+    position: {
+        type: String,
+        required: true
+    }
 })
 
 const Employee = mongoose.model("Employee", EmployeeSchema)
