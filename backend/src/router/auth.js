@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import jwt from 'jsonwebtoken'
 import User from '../database/models/User.js'
 
 
@@ -9,47 +10,74 @@ const routerAuth = Router()
 routerAuth.post('/register', async (req,res)=>{
     const {
         username,
+        email,
         password,
         role
     } = req.body
     try{
+        console.log( req.body )
         const user = await User.create({
             username,
+            name: username,
+            email,
             password,
             role
         })
 
-        res.send({
-            message:"Created!",
-            data:user
-        })
+        if( !user ) throw new Error("Not Create")
+
+        res.redirect(process.env.FRONT_URI)
     } catch( e ) {
-        res.send({
-            message: e.message,
-            data:null
-        })
+        console.log( e.message )
+        res.redirect(`${process.env.FRONT_URI}/singup`)
     }
 })
 
-routerAuth.post('/login', (req,res)=>{
-    res.send('login')
-})
+routerAuth.post('/login', async (req,res)=>{
+    const {
+        username,
+        password
+    } = req.body
 
-routerAuth.get('/list-users', async (req, res) => {
     try{
-        const users = await User.find({})
-        res.send({
-            message: `Find ${users.length} users`,
-            data: users
+        const user = await User.findOne({
+            username,
+            password
         })
-    } catch( e ) {
-        res.send({
+
+        if(!user) throw new Error("Not found");
+
+        const token = jwt.sign({
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role
+        }, 'clavemagica')
+
+        res.json({
+            error: false,
+            message: "Success",
+            data:{
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    role: user.role
+                },
+                token
+            }
+        })
+    }catch(e){
+        res.json({
+            error: true,
             message: e.message,
             data:null
         })
     }
-    
 })
+
+
+
 
 
 export default routerAuth

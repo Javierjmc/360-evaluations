@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose"
 
 
 const AssessmentSchema = new Schema({
-    // employee: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Employee',
-    //     required: true
-    // },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     comunication: {
         type: String,
         required: true

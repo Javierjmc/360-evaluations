@@ -14,12 +14,19 @@ import routerQuery from './router/queries.js'
 const app = express()
 // se crea router
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
 app.use( cors() )
 
+const checkToken = (req, res, next) => {
+    if (!req.headers.authorization) {
+        return res.status(403).json({ error: 'No credentials sent!' });
+    }
+    next();
+}
+
 app.use( '/api/auth', routerAuth)
-app.use( '/api', routerQuery )
+app.use( '/api', checkToken, routerQuery )
 
 app.listen(process.env.PORT, ()=>{
     console.log(`init in port ${process.env.PORT}`)
