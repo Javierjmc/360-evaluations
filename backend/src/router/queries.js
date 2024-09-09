@@ -32,6 +32,7 @@ routerQuery.get('/employees', (req,res)=>{
 routerQuery.post('/evaluations', async (req,res)=>{
     const {
         usernameId,
+        evaluatorId,
         comunication,
         teamwork,
         problemSolving,
@@ -40,8 +41,17 @@ routerQuery.post('/evaluations', async (req,res)=>{
         comments
     } = req.body
     try{
+        console.log( req.body )
+        const existAssement = await Assessment.findOne({
+            user:usernameId,
+            evaluator:evaluatorId
+        })
+
+        if( existAssement ) throw new Error("Exist")
+
         const assessment = await Assessment.create({
             user: usernameId,
+            evaluator:evaluatorId,
             comunication,
             teamwork,
             problemSolving,
@@ -61,12 +71,30 @@ routerQuery.post('/evaluations', async (req,res)=>{
             error:true,
             message: e.message,
             data:null
-        })        
+        })
     }
 })
 
-routerQuery.get('/evaluations/:id', (req,res)=>{
-    res.send(`evaluacion con id get ${req.params.id}`)
+routerQuery.get('/evaluations/:id', async (req,res)=>{
+    const id = req.params.id
+    try{
+        const assessments = await Assessment.find({
+            user:id
+        })
+        if( !assessments ) throw new Error("NotExist")
+        res.send({
+            error:false,
+            message: "Success",
+            data:assessments
+        })
+    }
+    catch(e){
+        res.send({
+            error:true,
+            message: e.message,
+            data:null
+        })
+    }
 })
 
 routerQuery.put('/evaluations/:id', (req,res)=>{

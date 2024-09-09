@@ -7,8 +7,11 @@ import { Dashboard360 } from './routes/Dashboard360'
 import { Form360 } from './routes/Form360'
 import { Login } from './routes/Login'
 import SingUp from './routes/SingUp.jsx'
+import LayoutAccess from './routes/LayoutAccess.jsx'
+
 
 const routes = createBrowserRouter([
+  
   {
     path:'/',
     element: <Login />
@@ -18,12 +21,17 @@ const routes = createBrowserRouter([
     element: <SingUp />
   },
   {
-    path:'/dashboard',
-    element: <Dashboard360 />
-  },
-  {
-    path:'/feedback/:id',
-    element: <Form360 />
+    element: <LayoutAccess />,
+    children: [
+      {
+        path:'/dashboard',
+        element: <Dashboard360 />
+      },
+      {
+        path:'/feedback/:id',
+        element: <Form360 />
+      }
+    ]
   }
 ])
 

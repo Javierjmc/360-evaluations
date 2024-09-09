@@ -6,21 +6,34 @@ import { BarChart, XAxis, YAxis, Bar, PieChart, Pie } from "recharts"
 import { ChartTooltip, ChartTooltipContent } from "../components/Chart"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../components/Table"
 import { Badge } from "../components/ui/badge"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { useData } from "../lib/Context"
+import { useEffect, useState } from "react"
 
 
 
 export function Dashboard360() {
-  const { users } = useData()
-  
+  const navigate = useNavigate()
+  const [ user, setUser] = useState(null)
+  const { users } = useData() 
+
+  useEffect(()=>{
+    setUser( JSON.parse(sessionStorage.getItem("current-user")) )
+
+  },[])
+
+  const handlerLogout = () => {
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('current-user')
+    navigate("/")
+  }
 
   
 
   return (
     (<div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header
-        className="flex h-14 items-center justify-between border-b bg-background px-4 sm:px-6">
+        className="flex h-14 items-center justify-between border-b border-slate-100 bg-background px-4 sm:px-6">
         <a
           href="#"
           className="flex items-center gap-2 text-lg font-semibold"
@@ -30,134 +43,18 @@ export function Dashboard360() {
         </a>
         <div className="flex items-center gap-1">
           <span className="font-semibold text-xl">username</span>
-          <span className="opacity-50 text-gray-400">(rol)</span>
+          <span className="opacity-50 text-gray-400">( {user?.username} )</span>
         </div>
-        <button>
+        <button onClick={handlerLogout}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
           </svg>
         </button>
-        
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-              <img
-                src="/placeholder.svg"
-                width={36}
-                height={36}
-                alt="Avatar"
-                className="overflow-hidden rounded-full"
-                style={{ aspectRatio: "36/36", objectFit: "cover" }} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Admin</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </header>
       <div className="flex flex-1">
-        {/* <aside className="hidden w-14 flex-col border-r bg-background sm:flex">
-          <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    prefetch={false}>
-                    <HomeIcon className="h-5 w-5" />
-                    <span className="sr-only">Dashboard</span>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent side="right">Dashboard</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    prefetch={false}>
-                    <ClipboardListIcon className="h-5 w-5" />
-                    <span className="sr-only">Evaluations</span>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent side="right">Evaluations</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    prefetch={false}>
-                    <BarChartIcon className="h-5 w-5" />
-                    <span className="sr-only">Reports</span>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent side="right">Reports</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <a
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                    prefetch={false}>
-                    <SettingsIcon className="h-5 w-5" />
-                    <span className="sr-only">Settings</span>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent side="right">Settings</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </nav>
-        </aside> */}
         <div className="flex flex-1 flex-col">
           <main className="flex-1 p-4 sm:p-6">
-            <div className="grid gap-6">
-              {/* <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">Total Evaluations</CardTitle>
-                    <ClipboardListIcon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">245</div>
-                    <p className="text-xs text-muted-foreground">+10% from last month</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">Completed Evaluations</CardTitle>
-                    <CheckIcon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">189</div>
-                    <p className="text-xs text-muted-foreground">+15% from last month</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">Pending Evaluations</CardTitle>
-                    <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">56</div>
-                    <p className="text-xs text-muted-foreground">-5% from last month</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">Overdue Evaluations</CardTitle>
-                    <CircleAlertIcon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">12</div>
-                    <p className="text-xs text-muted-foreground">+2 from last month</p>
-                  </CardContent>
-                </Card>
-              </div> */}
+            <div className="grid gap-6">              
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
                 <Card>
                   <CardHeader className="pb-3">
@@ -232,10 +129,7 @@ export function Dashboard360() {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    <TableBody>
-                      
-                        
-                      
+                    <TableBody>                     
                       {users.map( user => <TableRow key={user._id}>
                         <TableCell>
                           <div className="font-medium">{user.username}</div>

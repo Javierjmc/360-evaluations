@@ -4,12 +4,14 @@ import { Input } from "../components/Input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../components/Select"
 import { Textarea } from "../components/Textarea"
 import { Button } from "../components/Button"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams, NavLink } from "react-router-dom"
 import { useData } from "../lib/Context"
 import { useState, createContext, useEffect } from 'react'
 const AverageContext = createContext();
 
 export function Form360() {
+  const [enable, setEnable] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState(null)
   const [error, setError] = useState(false)
   const [comunication, setComunication] = useState(0)
@@ -21,6 +23,7 @@ export function Form360() {
   const currentUser = JSON.parse( sessionStorage.getItem('current-user') )
   const { getUser } = useData()
   const { id } = useParams()
+  const navigate = useNavigate()
 
   useEffect(()=>{
     (async()=>{
@@ -28,6 +31,30 @@ export function Form360() {
     })()
     
   },[id])
+
+  useEffect(()=>{
+    (async()=>{
+      const token = sessionStorage.getItem('token')
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/evaluations/${id}`,{
+        method:'get',
+        headers: {
+          'Content-Type':'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const { error, message, data } = await response.json()
+      console.log(error, message, data)
+      if( !error ){
+        setComunication( data[0].comunication )
+        setTeamwork( data[0].teamwork )
+        setProblemSolving( data[0].problemSolving )
+        setLeadership( data[0].leadership )
+        setAdaptability( data[0].adaptability )
+        setComments( data[0].comments )
+        setEnable(false)
+      }
+    })()
+  },[])
   
 
   const handlerSubmit = async (ev) => {
@@ -36,14 +63,18 @@ export function Form360() {
     setError(isError)
     if( isError ) return
     try{
+      console.log( user )
+      setLoading(true)
       const token = sessionStorage.getItem('token')
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/evaluations`,{
         method:'post',
         headers: {
+          'Content-Type':'application/json',
           Authorization: `Bearer ${token}`
         },
         body:JSON.stringify({
-          usernameId:currentUser.id,
+          usernameId: user._id,
+          evaluatorId: currentUser.id,
           comunication,
           teamwork,
           problemSolving,
@@ -52,11 +83,16 @@ export function Form360() {
           comments
         })
       })
-      const result = await response.json()
-      console.log( result )
+      const { error, message, data } = await response.json()
+      if( error ) throw new Error(message)
+      navigate('/dashboard')
 
     } catch( e ) {
-
+      console.log(e.message)
+      navigate(`/feedback/${id}?error=NOTCREATE`)
+    }
+    finally{
+      setLoading(false)
     }
 
   }
@@ -182,8 +218,9 @@ export function Form360() {
         </form>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-end">
-          <Button form='form' type="submit">Submit Evaluation</Button>
+        <div className="flex justify-end items-center flex-row gap-5">
+          {enable && <Button form='form' type="submit" disabled={loading}>{loading ? 'Enviando...' : 'Submit Evaluation'}</Button>}
+          <NavLink to="/dashboard" className="py-2 px-4 border border-black rounded-lg">Volver</NavLink>
         </div>
       </CardFooter>
     </Card>)

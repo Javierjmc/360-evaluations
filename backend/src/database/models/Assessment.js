@@ -7,6 +7,11 @@ const AssessmentSchema = new Schema({
         ref: 'User',
         required: true
     },
+    evaluator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     comunication: {
         type: String,
         required: true
